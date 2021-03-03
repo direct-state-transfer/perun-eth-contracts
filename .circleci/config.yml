@@ -34,13 +34,12 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash)
   linting:
     docker:
-      - image: circleci/python:latest
+      - image: trailofbits/eth-security-toolbox
     steps:
       - checkout-code
       - run:
           name: Dependencies
           command: |
-            sudo -H pip3 install slither-analyzer
             sudo -H npm install -g solhint
       - run:
           name: Solhint
