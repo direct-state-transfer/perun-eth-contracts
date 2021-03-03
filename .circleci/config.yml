@@ -1,11 +1,19 @@
 version: 2
 
+commands:
+  checkout_code:
+    steps:
+      - checkout
+      - run:
+          name: Clone submodules
+          command: git submodule update --init --recursive
+
 jobs:
   tests:
     docker:
       - image: circleci/node:12
     steps:
-      - checkout-code
+      - checkout_code
       - run:
           name: Dependencies
           command: |
@@ -28,7 +36,7 @@ jobs:
     docker:
       - image: ubuntu-2004:202010-01 # recommended linux image
     steps:
-      - checkout-code
+      - checkout_code
       - run:
           name: Dependencies
           command: |
@@ -41,14 +49,6 @@ jobs:
       - run:
           name: Slither
           command: slither --exclude solc-version,timestamp,boolean-equality,unimplemented-functions,locked-ether --solc-version 0.7.4 --filter-paths vendor/ .            
-
-commands:
-  checkout-code:
-    steps:
-      - checkout
-      - run:
-          name: Clone submodules
-          command: git submodule update --init --recursive
 
 workflows:
   version: 2
