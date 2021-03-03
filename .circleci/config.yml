@@ -31,16 +31,15 @@ jobs:
           command: truffle run coverage
       - run:
           name: Upload coverage
-          command: bash <(curl -s https://codecov.io/bash) || true
+          command: bash <(curl -s https://codecov.io/bash)
   linting:
     docker:
-      - image: ubuntu-2004:202010-01 # recommended linux image
+      - image: circleci/python:latest
     steps:
       - checkout-code
       - run:
           name: Dependencies
           command: |
-            sudo apt-get install -y python3-setuptools python3-pip
             sudo -H pip3 install slither-analyzer
             sudo -H npm install -g solhint
       - run:
