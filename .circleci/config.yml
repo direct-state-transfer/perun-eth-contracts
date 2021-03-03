@@ -46,7 +46,9 @@ jobs:
           command: solhint "contracts/**/*.sol"
       - run:
           name: Slither
-          command: slither --exclude solc-version,timestamp,boolean-equality,unimplemented-functions,locked-ether --solc-version 0.7.4 --filter-paths vendor/ .            
+          command: |
+            solc-select 0.7.4
+            slither --exclude solc-version,timestamp,boolean-equality,unimplemented-functions,locked-ether --filter-paths vendor/ .            
 
 workflows:
   build:
