@@ -1,0 +1,50 @@
+version: 2
+
+jobs:
+  tests:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - run:
+          name: Dependencies
+          command: |
+            rm -rf node_modules/
+            sudo npm install -g truffle@5.1.46 typescript
+            yarn install --pure-lockfile
+      - run:
+          name: Build
+          command: yarn build
+      - run:
+          name: Test
+          command: yarn test
+      - run:
+          name: Coverage
+          command: truffle run coverage
+      - run:
+          name: Upload coverage
+          command: bash <(curl -s https://codecov.io/bash) || true
+  linting:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - run:
+          name: Dependencies
+          command: |
+            sudo apt-get install -y python3-setuptools
+            sudo -H pip3 install slither-analyzer
+            sudo npm install -g solhint
+      - run:
+          name: Solhint
+          command: solhint "contracts/**/*.sol"
+      - run:
+          name: Slither
+          command: slither --exclude solc-version,timestamp,boolean-equality,unimplemented-functions,locked-ether --solc-version 0.7.4 --filter-paths vendor/ .            
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - tests
+      - linting
