@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: circleci/node:12
     steps:
-      - checkout
+      - checkout-code
       - run:
           name: Dependencies
           command: |
@@ -26,9 +26,9 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash) || true
   linting:
     docker:
-      - image: circleci/node:12
+      - image: ubuntu-2004:202010-01 # recommended linux image
     steps:
-      - checkout
+      - checkout-code
       - run:
           name: Dependencies
           command: |
